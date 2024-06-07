@@ -1,0 +1,7 @@
+# Ignore the object files
+*.o
+*.lo
+
+# Ignore the static & dynamic library files
+*.a
+*.so*
