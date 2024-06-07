@@ -43,6 +43,16 @@ typedef struct {
 /* Alias of the structure above */
 typedef PALERT_M16_HEADER PAM16H;
 
+/**
+ * @brief
+ *
+ */
+typedef union {
+	uint8_t  data_byte[4];
+	uint32_t data_uint;
+	float    data_real;
+} PALERT_M16_DATA;
+
 /*
  * Definition of Palert generic mode 16 packet structure, total size is 65536 bytes
  */
@@ -59,14 +69,14 @@ typedef PALERT_M16_PACKET PAM16P;
  *
  */
 #define PALERT_M16_WORD_GET(_PAM16H_WORD) \
-		(((uint16_t)((_PAM16H_WORD)[1]) << 8) + (uint16_t)((_PAM16H_WORD)[0]))
+		(((uint16_t)((_PAM16H_WORD)[1]) << 8) | (uint16_t)((_PAM16H_WORD)[0]))
 
 /**
  * @brief
  *
  */
 #define PALERT_M16_DWORD_GET(_PAM16H_DWORD) \
-		(((uint32_t)((_PAM16H_DWORD)[3]) << 24) + ((uint32_t)((_PAM16H_DWORD)[2]) << 16) + ((uint32_t)((_PAM16H_DWORD)[1]) << 8) + (uint32_t)((_PAM16H_DWORD)[0]))
+		(((uint32_t)((_PAM16H_DWORD)[3]) << 24) | ((uint32_t)((_PAM16H_DWORD)[2]) << 16) | ((uint32_t)((_PAM16H_DWORD)[1]) << 8) | (uint32_t)((_PAM16H_DWORD)[0]))
 
 /**
  * @brief
@@ -102,8 +112,8 @@ typedef PALERT_M16_PACKET PAM16P;
  *
  */
 #define PALERT_M16_TIMESTAMP_GET(_PAM16H) \
-		(((uint64_t)((_PAM16H)->unixtime[4]) << 32) + \
-		(((uint32_t)((_PAM16H)->unixtime[3]) << 24) + ((uint32_t)((_PAM16H)->unixtime[2]) << 16) + ((uint32_t)((_PAM16H)->unixtime[1]) << 8) + (uint32_t)((_PAM16H)->unixtime[0])))
+		(((uint64_t)((_PAM16H)->unixtime[4]) << 32) | \
+		(((uint32_t)((_PAM16H)->unixtime[3]) << 24) | ((uint32_t)((_PAM16H)->unixtime[2]) << 16) | ((uint32_t)((_PAM16H)->unixtime[1]) << 8) | (uint32_t)((_PAM16H)->unixtime[0])))
 
 /**
  * @brief Parse the palert sampling rate

@@ -28,35 +28,19 @@ typedef struct {
 	uint8_t  packet_type[2];
 	uint8_t  event_flag[2];
 /* System time infomation */
-#ifdef _SPARC
-	uint8_t sys_year[2];
-	uint8_t sys_month[2];
-	uint8_t sys_day[2];
-	uint8_t sys_hour[2];
-	uint8_t sys_minute[2];
-#else
-	uint16_t sys_year;
-	uint16_t sys_month;
-	uint16_t sys_day;
-	uint16_t sys_hour;
-	uint16_t sys_minute;
-#endif
+	uint8_t  sys_year[2];
+	uint8_t  sys_month[2];
+	uint8_t  sys_day[2];
+	uint8_t  sys_hour[2];
+	uint8_t  sys_minute[2];
 	uint8_t  sys_tenmsec;
 	uint8_t  sys_second;
 /* Event time infomation */
-#ifdef _SPARC
-	uint8_t ev_year[2];
-	uint8_t ev_month[2];
-	uint8_t ev_day[2];
-	uint8_t ev_hour[2];
-	uint8_t ev_minute[2];
-#else
-	uint16_t ev_year;
-	uint16_t ev_month;
-	uint16_t ev_day;
-	uint16_t ev_hour;
-	uint16_t ev_minute;
-#endif
+	uint8_t  ev_year[2];
+	uint8_t  ev_month[2];
+	uint8_t  ev_day[2];
+	uint8_t  ev_hour[2];
+	uint8_t  ev_minute[2];
 	uint8_t  ev_tenmsec;
 	uint8_t  ev_second;
 /* Hardware infomation */
@@ -182,21 +166,12 @@ typedef enum {
  * Definition of Palert mode 1 data block structure, total size is 10 bytes
  */
 typedef union {
-#ifdef _SPARC
 	struct {
 		uint8_t acc[3][2];
 		uint8_t pd[2];
 		uint8_t dis[2];
-	} norm_label;
+	};
 	uint8_t cmp[PALERT_M1_CHAN_COUNT][2];
-#else
-	struct {
-		int16_t acc[3];
-		int16_t pd;
-		int16_t dis;
-	} norm_label;
-	int16_t cmp[PALERT_M1_CHAN_COUNT];
-#endif
 } PALERT_M1_DATA;
 
 /* Alias of the structure above */
@@ -214,11 +189,11 @@ typedef struct {
 typedef PALERT_M1_PACKET PAM1P;
 
 /**
- * @brief
+ * @brief All the data withing the mode 1 packet should be Little-Endian
  *
  */
 #define PALERT_M1_WORD_GET(_PAM1H_WORD) \
-		(((uint16_t)((_PAM1H_WORD)[1]) << 8) + (uint16_t)((_PAM1H_WORD)[0]))
+		(((uint16_t)((_PAM1H_WORD)[1]) << 8) | (uint16_t)((_PAM1H_WORD)[0]))
 
 /**
  * @brief

@@ -71,7 +71,7 @@ typedef struct {
  *
  */
 #define PALERT_M4_WORD_GET(_PAM4H_WORD) \
-		(((uint16_t)((_PAM4H_WORD)[1]) << 8) + (uint16_t)((_PAM4H_WORD)[0]))
+		(((uint16_t)((_PAM4H_WORD)[1]) << 8) | (uint16_t)((_PAM4H_WORD)[0]))
 
 /**
  * @brief

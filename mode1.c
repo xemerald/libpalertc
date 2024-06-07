@@ -26,15 +26,15 @@
  */
 double pac_m1_systime_get( const PALERT_M1_HEADER *pam1h, long tzoffset_sec )
 {
-#ifdef _SPARC
-	return misc_mktime( ((pam1h->sys_year[1] << 8) + pam1h->sys_year[0]), ((pam1h->sys_month[1] << 8) + pam1h->sys_month[0]),
-		((pam1h->sys_day[1] << 8) + pam1h->sys_day[0]), ((pam1h->sys_hour[1] << 8) + pam1h->sys_hour[0]),
-		((pam1h->sys_minute[1] << 8) + pam1h->sys_minute[0]), pam1h->sys_second ) +
-		tzoffset_sec + ((pam1h->sys_tenmsec << 3) + (pam1h->sys_tenmsec << 1)) / 1000.0;
-#else
-	return misc_mktime( pam1h->sys_year, pam1h->sys_month, pam1h->sys_day, pam1h->sys_hour, pam1h->sys_minute, pam1h->sys_second ) +
-		tzoffset_sec + ((pam1h->sys_tenmsec << 3) + (pam1h->sys_tenmsec << 1)) / 1000.0;
-#endif
+	return
+		misc_mktime(
+			PALERT_M1_WORD_GET( pam1h->sys_year ),
+			PALERT_M1_WORD_GET( pam1h->sys_month ),
+			PALERT_M1_WORD_GET( pam1h->sys_day ),
+			PALERT_M1_WORD_GET( pam1h->sys_hour ),
+			PALERT_M1_WORD_GET( pam1h->sys_minute ),
+			pam1h->sys_second
+		) + tzoffset_sec + ((pam1h->sys_tenmsec << 3) + (pam1h->sys_tenmsec << 1)) / 1000.0;
 }
 
 /**
@@ -46,15 +46,15 @@ double pac_m1_systime_get( const PALERT_M1_HEADER *pam1h, long tzoffset_sec )
  */
 double pac_m1_evtime_get( const PALERT_M1_HEADER *pam1h, long tzoffset_sec )
 {
-#ifdef _SPARC
-	return misc_mktime( ((pam1h->ev_year[1] << 8) + pam1h->ev_year[0]), ((pam1h->ev_month[1] << 8) + pam1h->ev_month[0]),
-		((pam1h->ev_day[1] << 8) + pam1h->ev_day[0]), ((pam1h->ev_hour[1] << 8) + pam1h->ev_hour[0]),
-		((pam1h->ev_minute[1] << 8) + pam1h->ev_minute[0]), pam1h->ev_second ) +
-		tzoffset_sec + ((pam1h->ev_tenmsec << 3) + (pam1h->ev_tenmsec << 1))/1000.0;
-#else
-	return misc_mktime( pam1h->ev_year, pam1h->ev_month, pam1h->ev_day, pam1h->ev_hour, pam1h->ev_minute, pam1h->ev_second ) +
-		tzoffset_sec + ((pam1h->ev_tenmsec << 3) + (pam1h->ev_tenmsec << 1)) / 1000.0;
-#endif
+	return
+		misc_mktime(
+			PALERT_M1_WORD_GET( pam1h->ev_year ),
+			PALERT_M1_WORD_GET( pam1h->ev_month ),
+			PALERT_M1_WORD_GET( pam1h->ev_day ),
+			PALERT_M1_WORD_GET( pam1h->ev_hour ),
+			PALERT_M1_WORD_GET( pam1h->ev_minute ),
+			pam1h->ev_second
+		) + tzoffset_sec + ((pam1h->ev_tenmsec << 3) + (pam1h->ev_tenmsec << 1)) / 1000.0;
 }
 
 /**
@@ -164,36 +164,36 @@ void pac_m1_data_extract(
 	const PALERT_M1_PACKET *packet, int32_t buffer_0[PALERT_M1_SAMPLE_NUMBER], int32_t buffer_1[PALERT_M1_SAMPLE_NUMBER],
 	int32_t buffer_2[PALERT_M1_SAMPLE_NUMBER], int32_t buffer_3[PALERT_M1_SAMPLE_NUMBER], int32_t buffer_4[PALERT_M1_SAMPLE_NUMBER]
 ) {
-/* Shortcut for the input data */
+/* Shortcut for the packet data */
 	const PALERT_M1_DATA *_data = packet->data;
 /* */
 	int32_t *_buffer[PALERT_M1_CHAN_COUNT] = { buffer_0, buffer_1, buffer_2, buffer_3, buffer_4 };
 	int32_t  dumping[PALERT_M1_SAMPLE_NUMBER] = { 0 };
+	uint16_t word;
 
 /* */
 	for ( int i = 0; i < PALERT_M1_CHAN_COUNT; i++ )
 		if ( !_buffer[i] )
 			_buffer[i] = dumping;
 
-#ifdef _SPARC
-	uint32_t hbyte;
-/* Go thru all the input data */
+/* Go thru all the data */
 	for ( int i = 0; i < PALERT_M1_SAMPLE_NUMBER; i++, _data++ ) {
-	/* Channel seq: HLZ(0), HLN(1), HLE(2), PD(3), Disp(4) */
-		for ( int j = 0; j < PALERT_M1_CHAN_COUNT; j++ ) {
-			hbyte         = _data->cmp[j][1];
-			_buffer[j][i] = (hbyte << 8) + _data->cmp[j][0];
-			if ( hbyte & 0x80 )
-				_buffer[j][i] |= 0xffff0000;
-		}
+	/* Channel HLZ(0) */
+		word = ((uint16_t)_data->cmp[0][1] << 8) | _data->cmp[0][0];
+		_buffer[0][i] = *(int16_t *)&word;
+	/* Channel HLN(1) */
+		word = ((uint16_t)_data->cmp[1][1] << 8) | _data->cmp[1][0];
+		_buffer[1][i] = *(int16_t *)&word;
+	/* Channel HLE(2) */
+		word = ((uint16_t)_data->cmp[2][1] << 8) | _data->cmp[2][0];
+		_buffer[2][i] = *(int16_t *)&word;
+	/* Channel PD(3) */
+		word = ((uint16_t)_data->cmp[3][1] << 8) | _data->cmp[3][0];
+		_buffer[3][i] = *(int16_t *)&word;
+	/* Channel Disp(4) */
+		word = ((uint16_t)_data->cmp[4][1] << 8) | _data->cmp[4][0];
+		_buffer[4][i] = *(int16_t *)&word;
 	}
-#else
-/* Go thru all the input data */
-	for ( int i = 0; i < PALERT_M1_SAMPLE_NUMBER; i++, _data++ )
-	/* Channel seq: HLZ(0), HLN(1), HLE(2), PD(3), Disp(4) */
-		for ( int j = 0; j < PALERT_M1_CHAN_COUNT; j++ )
-			_buffer[j][i] = _data->cmp[j];
-#endif
 
 	return;
 }

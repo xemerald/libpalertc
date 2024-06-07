@@ -36,7 +36,11 @@ double pac_m16_sptime_get( const PALERT_M16_HEADER *pam16h )
  */
 double pac_m16_scale_get( const PALERT_M16_HEADER *pam16h )
 {
-	return *((float *)pam16h->scale);
+	PALERT_M16_DATA data = {
+		.data_uint = PALERT_M16_DWORD_GET( pam16h->scale )
+	};
+
+	return data.data_real;
 }
 
 /**
@@ -47,7 +51,11 @@ double pac_m16_scale_get( const PALERT_M16_HEADER *pam16h )
  */
 double pac_m16_ntp_offset_get( const PALERT_M16_HEADER *pam16h )
 {
-	return *((float *)pam16h->ntp_offset);
+	PALERT_M16_DATA data = {
+		.data_uint = PALERT_M16_DWORD_GET( pam16h->ntp_offset )
+	};
+
+	return data.data_real;
 }
 
 /**
@@ -59,9 +67,10 @@ double pac_m16_ntp_offset_get( const PALERT_M16_HEADER *pam16h )
  */
 void pac_m16_data_extract( const PALERT_M16_PACKET *packet, int nbuf, ... )
 {
-/* Shortcut for the input data */
-	const float *_data = (float *)&packet->bytes[PALERT_M16_HEADER_LENGTH];
-	const float * const _data_end = (float *)((uint8_t *)_data + PALERT_M16_WORD_GET( packet->header.data_len ));
+/* Shortcut for the packet data */
+	const PALERT_M16_DATA *       data_ptr = (PALERT_M16_DATA *)&packet->bytes[PALERT_M16_HEADER_LENGTH];
+	const PALERT_M16_DATA * const data_end = (PALERT_M16_DATA *)((uint8_t *)data_ptr + PALERT_M16_WORD_GET( packet->header.data_len ));
+	PALERT_M16_DATA               data_buf;
 /* */
 	float  *_buffer[packet->header.nchannel];
 	float   dumping[PALERT_MAX_SAMPRATE] = { 0 };
@@ -76,10 +85,13 @@ void pac_m16_data_extract( const PALERT_M16_PACKET *packet, int nbuf, ... )
 		if ( !(_buffer[i] = va_arg(ap, float *)) )
 			_buffer[i] = dumping;
 	va_end(ap);
-/* Go thru all the input data */
-	for ( int i = 0; _data < _data_end; i++, _data += packet->header.nchannel )
-		for ( int j = 0; j < packet->header.nchannel; j++ )
-			_buffer[j][i] = _data[j];
+/* Go thru all the packet data */
+	for ( int i = 0; data_ptr < data_end; i++, data_ptr += packet->header.nchannel ) {
+		for ( int j = 0; j < packet->header.nchannel; j++ ) {
+			data_buf.data_uint = PALERT_M16_DWORD_GET( data_ptr->data_byte );
+			_buffer[j][i]      = data_buf.data_real;
+		}
+	}
 
 	return;
 }
