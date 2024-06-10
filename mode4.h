@@ -110,6 +110,12 @@ typedef struct {
 		PALERT_M4_WORD_GET((_PAM4H)->firmware)
 
 /**
+ * @brief Parse the palert packet type
+ *
+ */
+#define PALERT_M4_PKTTYPE_GET(_PAM4H) \
+		PALERT_M4_WORD_GET((_PAM4H)->packet_type)
+/**
  * @brief
  *
  */
