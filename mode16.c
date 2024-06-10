@@ -12,7 +12,6 @@
 /* Standard C header include */
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdarg.h>
 /* Local header include */
 #include <libpalertc.h>
 #include <mode16.h>
@@ -63,9 +62,9 @@ double pac_m16_ntp_offset_get( const PALERT_M16_HEADER *pam16h )
  *
  * @param packet
  * @param nbuf
- * @param ... should be float * type
+ * @param buffer
  */
-void pac_m16_data_extract( const PALERT_M16_PACKET *packet, int nbuf, ... )
+void pac_m16_data_extract( const PALERT_M16_PACKET *packet, int nbuf, float *buffer[] )
 {
 /* Shortcut for the packet data */
 	const PALERT_M16_DATA *       data_ptr = (PALERT_M16_DATA *)&packet->bytes[PALERT_M16_HEADER_LENGTH];
@@ -74,21 +73,18 @@ void pac_m16_data_extract( const PALERT_M16_PACKET *packet, int nbuf, ... )
 /* */
 	float  *_buffer[packet->header.nchannel];
 	float   dumping[PALERT_MAX_SAMPRATE] = { 0 };
-	va_list ap;
 
 /* */
 	for ( int i = 0; i < packet->header.nchannel; i++ )
 		_buffer[i] = dumping;
 /* */
-	va_start(ap, nbuf);
 	for ( int i = 0; nbuf > 0 && i < packet->header.nchannel; nbuf--, i++ )
-		if ( !(_buffer[i] = va_arg(ap, float *)) )
-			_buffer[i] = dumping;
-	va_end(ap);
+		if ( buffer[i] )
+			_buffer[i] = buffer[i];
 /* Go thru all the packet data */
 	for ( int i = 0; data_ptr < data_end; i++, data_ptr += packet->header.nchannel ) {
 		for ( int j = 0; j < packet->header.nchannel; j++ ) {
-			data_buf.data_uint = PALERT_M16_DWORD_GET( data_ptr->data_byte );
+			data_buf.data_uint = PALERT_M16_DWORD_GET( data_ptr[j].data_byte );
 			_buffer[j][i]      = data_buf.data_real;
 		}
 	}

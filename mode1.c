@@ -161,38 +161,36 @@ char *pac_m1_ip_get( const PALERT_M1_HEADER *pam1h, const int iptype, char *dest
  * @param buffer_4
  */
 void pac_m1_data_extract(
-	const PALERT_M1_PACKET *packet, int32_t buffer_0[PALERT_M1_SAMPLE_NUMBER], int32_t buffer_1[PALERT_M1_SAMPLE_NUMBER],
-	int32_t buffer_2[PALERT_M1_SAMPLE_NUMBER], int32_t buffer_3[PALERT_M1_SAMPLE_NUMBER], int32_t buffer_4[PALERT_M1_SAMPLE_NUMBER]
+	const PALERT_M1_PACKET *packet, int32_t *buffer[PALERT_M1_CHAN_COUNT]
 ) {
 /* Shortcut for the packet data */
 	const PALERT_M1_DATA *_data = packet->data;
 /* */
-	int32_t *_buffer[PALERT_M1_CHAN_COUNT] = { buffer_0, buffer_1, buffer_2, buffer_3, buffer_4 };
 	int32_t  dumping[PALERT_M1_SAMPLE_NUMBER] = { 0 };
 	uint16_t word;
 
 /* */
 	for ( int i = 0; i < PALERT_M1_CHAN_COUNT; i++ )
-		if ( !_buffer[i] )
-			_buffer[i] = dumping;
+		if ( !buffer[i] )
+			buffer[i] = dumping;
 
 /* Go thru all the data */
 	for ( int i = 0; i < PALERT_M1_SAMPLE_NUMBER; i++, _data++ ) {
 	/* Channel HLZ(0) */
 		word = ((uint16_t)_data->cmp[0][1] << 8) | _data->cmp[0][0];
-		_buffer[0][i] = *(int16_t *)&word;
+		buffer[0][i] = *(int16_t *)&word;
 	/* Channel HLN(1) */
 		word = ((uint16_t)_data->cmp[1][1] << 8) | _data->cmp[1][0];
-		_buffer[1][i] = *(int16_t *)&word;
+		buffer[1][i] = *(int16_t *)&word;
 	/* Channel HLE(2) */
 		word = ((uint16_t)_data->cmp[2][1] << 8) | _data->cmp[2][0];
-		_buffer[2][i] = *(int16_t *)&word;
+		buffer[2][i] = *(int16_t *)&word;
 	/* Channel PD(3) */
 		word = ((uint16_t)_data->cmp[3][1] << 8) | _data->cmp[3][0];
-		_buffer[3][i] = *(int16_t *)&word;
+		buffer[3][i] = *(int16_t *)&word;
 	/* Channel Disp(4) */
 		word = ((uint16_t)_data->cmp[4][1] << 8) | _data->cmp[4][0];
-		_buffer[4][i] = *(int16_t *)&word;
+		buffer[4][i] = *(int16_t *)&word;
 	}
 
 	return;

@@ -278,7 +278,4 @@ char  *pac_m1_chan_code_get( const int );
 double pac_m1_chan_unit_get( const int );
 char  *pac_m1_trigmode_get( const PALERT_M1_HEADER * );
 char  *pac_m1_ip_get( const PALERT_M1_HEADER *, const int, char * );
-void   pac_m1_data_extract(
-	const PALERT_M1_PACKET *, int32_t [PALERT_M1_SAMPLE_NUMBER], int32_t [PALERT_M1_SAMPLE_NUMBER],
-	int32_t [PALERT_M1_SAMPLE_NUMBER], int32_t [PALERT_M1_SAMPLE_NUMBER], int32_t [PALERT_M1_SAMPLE_NUMBER]
-);
+void   pac_m1_data_extract( const PALERT_M1_PACKET *, int32_t *[PALERT_M1_CHAN_COUNT] );

@@ -134,4 +134,4 @@ typedef PALERT_M16_PACKET PAM16P;
 double pac_m16_sptime_get( const PALERT_M16_HEADER * );
 double pac_m16_scale_get( const PALERT_M16_HEADER * );
 double pac_m16_ntp_offset_get( const PALERT_M16_HEADER * );
-void   pac_m16_data_extract( const PALERT_M16_PACKET *, int, ... );
+void   pac_m16_data_extract( const PALERT_M16_PACKET *, int, float *[] );
