@@ -237,7 +237,7 @@ typedef PALERT_M1_PACKET PAM1P;
  * @brief Parse the palert packet type
  *
  */
-#define PALERT_M1_PKTTYPE_GET(_PAM1H) \
+#define PALERT_M1_PACKETTYPE_GET(_PAM1H) \
 		PALERT_M1_WORD_GET((_PAM1H)->packet_type)
 
 /**
