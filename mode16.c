@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 /* Local header include */
-#include <libpalertc.h>
-#include <mode16.h>
+#include "libpalertc.h"
+#include "mode16.h"
 
 /**
  * @brief Parse the palert mode 16 timestamp to calendar time(UTC)

@@ -10,11 +10,11 @@
  */
 #pragma once
 /* */
-#include <samprate.h>
-#include <trigmode.h>
-#include <mode1.h>
-#include <mode4.h>
-#include <mode16.h>
+#include "samprate.h"
+#include "trigmode.h"
+#include "mode1.h"
+#include "mode4.h"
+#include "mode16.h"
 /* */
 #define LIBPALERTC_VERSION "2.0.0"    //!< Library version
 #define LIBPALERTC_RELEASE "2024.06.05"  //!< Library release date

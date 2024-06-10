@@ -12,7 +12,7 @@
 /* */
 #include <stdint.h>
 /* */
-#include <samprate.h>
+#include "samprate.h"
 
 /* */
 #define PALERT_M16_HEADER_LENGTH    36

@@ -15,9 +15,9 @@ COMPAT_VER = $(MAJOR_VER).0.0
 # Default settings for install target
 PREFIX ?= /usr/local
 EXEC_PREFIX ?= $(PREFIX)
-LIBDIR ?= $(EXEC_PREFIX)/lib
-INCLUDEDIR ?= $(PREFIX)/include
-DATAROOTDIR ?= $(PREFIX)/share
+LIBDIR ?= $(DESTDIR)$(EXEC_PREFIX)/lib
+INCLUDEDIR ?= $(DESTDIR)$(PREFIX)/include/libpalertc
+DATAROOTDIR ?= $(DESTDIR)$(PREFIX)/share
 
 LIB_SRCS = \
 		misc.c general.c \
@@ -71,9 +71,9 @@ clean:
 
 install: shared
 	@echo "Installing into $(PREFIX)"
-	@mkdir -p $(DESTDIR)$(PREFIX)/include
-	@cp libpalertc.h $(DESTDIR)$(PREFIX)/include
-	@cp -a $(LIB_SO_BASE) $(LIB_SO_MAJOR) $(LIB_SO_NAME) $(LIB_SO) $(DESTDIR)$(LIBDIR)
+	@mkdir -p $(INCLUDEDIR)
+	@cp *.h $(INCLUDEDIR)
+	@cp -a $(LIB_SO_BASE) $(LIB_SO_MAJOR) $(LIB_SO_NAME) $(LIB_SO) $(LIBDIR)
 
 .SUFFIXES: .c .o .lo
 

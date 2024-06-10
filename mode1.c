@@ -13,9 +13,9 @@
 #include <stdio.h>
 #include <stdint.h>
 /* Local header include */
-#include <libpalertc.h>
-#include <mode1.h>
-#include <misc.h>
+#include "libpalertc.h"
+#include "mode1.h"
+#include "misc.h"
 
 /**
  * @brief Parse the Palert Mode 1 system time to calendar time(UTC)

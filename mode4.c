@@ -14,9 +14,9 @@
 #include <stdint.h>
 #include <string.h>
 /* Local header include */
-#include <libpalertc.h>
-#include <mode4.h>
-#include <misc.h>
+#include "libpalertc.h"
+#include "mode4.h"
+#include "misc.h"
 
 /**
  * @brief
