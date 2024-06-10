@@ -123,6 +123,13 @@ typedef PALERT_M16_PACKET PAM16P;
 		((PALERT_M16_WORD_GET((_PAM16H)->sps) && PALERT_M16_WORD_GET((_PAM16H)->sps) <= PALERT_MAX_SAMPRATE) ? \
 		PALERT_M16_WORD_GET((_PAM16H)->sps) : PALERT_DEFAULT_SAMPRATE)
 
+/**
+ * @brief Parse the palert sample number
+ *
+ */
+#define PALERT_M16_SAMPNUM_GET(_PAM16H) \
+		((PALERT_M16_WORD_GET((_PAM16H)->data_len) >> 2) / (_PAM16H)->nchannel)
+
 /*
  * PALERT_IS_MODE16_HEADER()
  */
