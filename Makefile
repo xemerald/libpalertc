@@ -52,19 +52,20 @@ shared dynamic: $(LIB_SO)
 
 # Build static library
 $(LIB_A): $(LIB_OBJS)
-	@echo "Building static library $(LIB_A)"
-	$(RM) -f $(LIB_A)
-	$(AR) -crs $(LIB_A) $(LIB_OBJS)
+	@echo "Building static library $(LIB_A)..."
+	@$(RM) $(LIB_A)
+	@$(AR) -crs $(LIB_A) $(LIB_OBJS)
 
 # Build shared/dynamic library
 $(LIB_SO): $(LIB_LOBJS)
-	@echo "Building shared library $(LIB_SO)"
-	$(RM) -f $(LIB_SO) $(LIB_SO_MAJOR) $(LIB_SO_BASE)
-	$(CC) $(CFLAGS) $(LIB_OPTS) -o $(LIB_SO) $(LIB_LOBJS)
-	ln -s $(LIB_SO) $(LIB_SO_BASE)
-	ln -s $(LIB_SO) $(LIB_SO_MAJOR)
+	@echo "Building shared library $(LIB_SO)..."
+	@$(RM) $(LIB_SO) $(LIB_SO_MAJOR) $(LIB_SO_BASE)
+	@$(CC) $(CFLAGS) $(LIB_OPTS) -o $(LIB_SO) $(LIB_LOBJS)
+	@ln -s $(LIB_SO) $(LIB_SO_BASE)
+	@ln -s $(LIB_SO) $(LIB_SO_MAJOR)
 
 clean:
+	@echo "Cleaning build objects & library..."
 	@$(RM) $(LIB_OBJS) $(LIB_LOBJS) $(LIB_A) $(LIB_SO) $(LIB_SO_MAJOR) $(LIB_SO_BASE)
 	@echo "All clean."
 
@@ -78,11 +79,13 @@ install: shared
 
 # Standard object building
 .c.o:
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	@echo "Compiling $<..."
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # Standard object building for shared library using -fPIC
 .c.lo:
-	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c $< -o $@
+	@echo "Compiling $<..."
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c $< -o $@
 
 # Print Makefile expanded variables, e.g. % make print-LIB_SO
 print-%:
