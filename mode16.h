@@ -91,7 +91,7 @@ typedef PALERT_M16_PACKET PAM16P;
  */
 #define PALERT_M16_SYNC_CHECK(_PAM16H) \
 		(((_PAM16H)->sync_char[0] == 0x53) && ((_PAM16H)->sync_char[1] == 0x59) && \
-		((_PAM16H)->sync_char[2] == 0x4F) && ((_PAM16H)->sync_char[3] == 0x43))
+		((_PAM16H)->sync_char[2] == 0x4E) && ((_PAM16H)->sync_char[3] == 0x43))
 
 /**
  * @brief Parse the palert packet length
@@ -135,7 +135,7 @@ typedef PALERT_M16_PACKET PAM16P;
  */
 #define PALERT_PKT_IS_MODE16(_PAPKT) \
 		((((uint8_t *)(_PAPKT))[0] == 0x53) && (((uint8_t *)(_PAPKT))[1] == 0x59) && \
-		(((uint8_t *)(_PAPKT))[2] == 0x4F) && (((uint8_t *)(_PAPKT))[3] == 0x43))
+		(((uint8_t *)(_PAPKT))[2] == 0x4E) && (((uint8_t *)(_PAPKT))[3] == 0x43))
 
 /* Export functions's prototypes */
 double pac_m16_sptime_get( const PALERT_M16_HEADER * );
